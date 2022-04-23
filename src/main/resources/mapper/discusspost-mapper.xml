@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.zzm.community.dao.DiscussPostMapper">
+<mapper namespace="com.zzm.community.dao.mapper.DiscussPostMapper">
 
     <sql id="selectFields">
         id, user_id, title, content, type, status, create_time, comment_count, score
@@ -10,7 +10,7 @@
 
     <select id="selectDiscussPosts" resultType="DiscussPost">
         select
-        <include refid="selectFields"></include>
+        <include refid="selectFields"/>
         from discuss_post
         where status != 2
         <if test="userId != 0">

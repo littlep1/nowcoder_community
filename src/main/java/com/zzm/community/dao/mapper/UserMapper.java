@@ -1,4 +1,4 @@
-package com.zzm.community.dao;
+package com.zzm.community.dao.mapper;
 
 import com.zzm.community.entity.User;
 import org.apache.ibatis.annotations.Mapper;

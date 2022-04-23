@@ -1,8 +1,8 @@
 package com.zzm.community;
 
-import com.zzm.community.dao.DiscussPostMapper;
-import com.zzm.community.dao.LoginTicketMapper;
-import com.zzm.community.dao.UserMapper;
+import com.zzm.community.dao.mapper.DiscussPostMapper;
+import com.zzm.community.dao.mapper.LoginTicketMapper;
+import com.zzm.community.dao.mapper.UserMapper;
 import com.zzm.community.entity.DiscussPost;
 import com.zzm.community.entity.LoginTicket;
 import com.zzm.community.entity.User;

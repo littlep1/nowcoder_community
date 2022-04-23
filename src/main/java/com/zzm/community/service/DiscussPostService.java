@@ -1,6 +1,6 @@
 package com.zzm.community.service;
 
-import com.zzm.community.dao.DiscussPostMapper;
+import com.zzm.community.dao.mapper.DiscussPostMapper;
 import com.zzm.community.entity.DiscussPost;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

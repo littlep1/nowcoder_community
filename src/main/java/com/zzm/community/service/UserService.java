@@ -1,7 +1,7 @@
 package com.zzm.community.service;
 
-import com.zzm.community.dao.LoginTicketMapper;
-import com.zzm.community.dao.UserMapper;
+import com.zzm.community.dao.mapper.LoginTicketMapper;
+import com.zzm.community.dao.mapper.UserMapper;
 import com.zzm.community.entity.LoginTicket;
 import com.zzm.community.entity.User;
 import com.zzm.community.util.CommunityConstant;
