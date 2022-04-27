@@ -44,6 +44,10 @@ public class UserService implements CommunityConstant {
         return userMapper.selectById(id);
     }
 
+    public User findUserByEmail(String email) {
+        return userMapper.selectByEmail(email);
+    }
+
     public Map<String, Object> register(User user) {
         Map<String, Object> map = new HashMap<>();
         // 空值处理
@@ -188,5 +192,37 @@ public class UserService implements CommunityConstant {
         newPassword = CommunityUtil.md5(newPassword + user.getSalt());
         int updateSuccess = userMapper.updatePassword(user.getId(), newPassword);
         return map;
+    }
+
+    public Map<String, Object> resetPassword(String email, String password) {
+        Map<String, Object> map = new HashMap<>();
+
+        if (StringUtils.isBlank(email)) {
+            map.put("emailMsg", "邮箱不能为空！");
+            return map;
+        }
+        User user = findUserByEmail(email);
+        if (user == null) {
+            map.put("emailMsg", "邮箱错误！");
+            return map;
+        }
+        if (StringUtils.isBlank(password)) {
+            map.put("passwordMsg", "密码不能为空!");
+            return map;
+        }
+
+        // 邮箱正确
+        password = CommunityUtil.md5(password + user.getSalt());
+        int updateSuccess = userMapper.updatePassword(user.getId(), password);
+        return map;
+    }
+
+    public void sendForgetCode(String email, String code) {
+        // 激活邮件
+        Context context = new Context();
+        context.setVariable("email", email);
+        context.setVariable("code", code);
+        String content = templateEngine.process("/mail/forget", context);
+        mailClient.sendMail(email, "找回密码", content);
     }
 }

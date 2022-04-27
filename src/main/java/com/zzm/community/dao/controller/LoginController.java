@@ -4,6 +4,7 @@ import com.google.code.kaptcha.Producer;
 import com.zzm.community.entity.User;
 import com.zzm.community.service.UserService;
 import com.zzm.community.util.CommunityConstant;
+import com.zzm.community.util.CommunityUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.Cookie;
@@ -135,5 +133,39 @@ public class LoginController implements CommunityConstant {
         userService.logout(ticket);
         return "redirect:/login";
     }
+
+    @RequestMapping(path = "/getforgetcode", method = RequestMethod.GET)
+    @ResponseBody
+    public String getForgetCode(String email, Model model, HttpSession session) {
+        if (StringUtils.isBlank(email)) {
+            return CommunityUtil.getJSONString(1, "邮箱不能为空！");
+        }
+        User user = userService.findUserByEmail(email);
+        if (user == null) {
+            return CommunityUtil.getJSONString(1, "邮箱错误！");
+        }
+        String code = CommunityUtil.generateUUID().substring(0, 4);
+        userService.sendForgetCode(email, code);
+        session.setAttribute("verifyCode", code);
+
+        return CommunityUtil.getJSONString(0);
+    }
+
+    @RequestMapping(path = "/resetPassword", method = RequestMethod.POST)
+    public String resetPassword(String email, String code, String newPassword, Model model, HttpSession session) {
+        String verifyCode = (String) session.getAttribute("verifyCode");
+        if (StringUtils.isBlank(code) || StringUtils.isBlank(verifyCode) || !verifyCode.equals(code)) {
+            model.addAttribute("codeMsg", "验证码错误！");
+            return "/site/forget";
+        }
+        Map<String, Object> map = userService.resetPassword(email, newPassword);
+        if (map.isEmpty()) {
+            return "redirect:/login";
+        }
+        model.addAttribute("emailMsg", map.get("emailMsg"));
+        model.addAttribute("passwordMsg", map.get("passwordMsg"));
+        return "/site/forget";
+    }
+
 
 }

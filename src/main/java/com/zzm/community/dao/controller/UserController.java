@@ -1,5 +1,6 @@
 package com.zzm.community.dao.controller;
 
+import com.google.code.kaptcha.Producer;
 import com.zzm.community.annotation.LoginRequired;
 import com.zzm.community.entity.User;
 import com.zzm.community.service.UserService;
@@ -45,6 +46,9 @@ public class UserController {
 
     @Autowired
     private HostHolder hostHolder;
+
+    @Autowired
+    private Producer kaptchaProducer;
 
     @LoginRequired
     @RequestMapping(path = "/setting", method = RequestMethod.GET)
